@@ -3,7 +3,7 @@
 
 def kmer(x: str, k: int) -> list[str]:
     """
-    Computer all k-mers of x.
+    Computes all k-mers of x.
 
     >>> kmer('agtagtcg', 3)
     ['agt', 'gta', 'tag', 'agt', 'gtc', 'tcg']
@@ -11,16 +11,21 @@ def kmer(x: str, k: int) -> list[str]:
     >>> kmer('agtagtcg', 5)
     ['agtag', 'gtagt', 'tagtc', 'agtcg']
     """
-    kmers = []
-    for i in range(len(x)-k+1):
-        kmers.append(x[i:i+k])
+    if k <= 0:
+        raise Exception("k not positve")
+    
+    kmers = [x[i:i+k] for i in range(len(x)-k+1)]
+
+    # kmers = []
+    # for i in range(len(x)-k+1):
+    #     kmers.append(x[i:i+k])
 
     return kmers
 
 
 def unique_kmers(x: str, k: int) -> list[str]:
     """
-    Computer all unique k-mers of x.
+    Computes all unique k-mers of x.
 
     >>> unique_kmers('agtagtcg', 3)
     ['agt', 'gta', 'tag', 'gtc', 'tcg']
@@ -35,13 +40,15 @@ def unique_kmers(x: str, k: int) -> list[str]:
         if km not in unique:
             unique.append(km)
 
+    # unique = list(set(kmer(x, k))) # set only stores a value once, however not in order
+
     return unique
 
 
 
 def count_kmers(x: str, k: int) -> dict[str, int]:
     """
-    Computer all k-mers of x and count how often they appear.
+    Computes all k-mers of x and count how often they appear.
 
     >>> count_kmers('agtagtcg', 3)
     {'agt': 2, 'gta': 1, 'tag': 1, 'gtc': 1, 'tcg': 1}
@@ -49,31 +56,15 @@ def count_kmers(x: str, k: int) -> dict[str, int]:
     >>> count_kmers('gttttatttg', 2)
     {'gt': 1, 'tt': 5, 'ta': 1, 'at': 1, 'tg': 1}
     """
-    # kmer_count = {}
-    # kmers = kmer(x, k)
-    # unique = unique_kmers(x, k)
-    # for i in unique:
-    #     count = 0
-    #     for j in kmers:
-    #         if i == j:
-    #             count +=1
-    #     kmer_count[i] = count
-
-    kmer_count = []
-    kmers = kmer(x, k)
-    unique = unique_kmers(x, k)
-    for i in unique:
-        count = 0
-        for j in kmers:
-            if i == j:
-                count += 1
-        kmer_count.append((i, count))
-
-    sorted_kcount = sorted(kmer_count, key=lambda t:t[1])
+    kmer_count = {}
+    for km in kmer(x, k):
+        if km not in kmer_count:
+            kmer_count[km] = 0
+        kmer_count[km] += 1
     
-    return sorted_kcount
+    return kmer_count
 
 
-
-print(count_kmers('agtagtcg', 3))
-print(count_kmers('gttttatttg', 2))
+# print(kmer('agtagtcg', 3))
+# print(unique_kmers('agtagtcg', 3))
+# print(count_kmers('agtagtcg', 3))
